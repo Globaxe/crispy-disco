@@ -9,11 +9,11 @@ import ply.lex as lex
 from ply.lex import TOKEN
 
 reserved_words = (
-    'bpm',
-    'start',
-    'stop',
-    'rep',
-    'arp'
+    'BPM',
+    'START',
+    'STOP',
+    'REP',
+    'ARP'
 )
 
 notes = (
@@ -41,14 +41,14 @@ tokens =(
 
 literals = r'();={}[],'
 
-@TOKEN('|'.join(notes))
+
+@TOKEN(r'|'.join(notes))
 def t_NOTE(t):
     return t
 
-# reconnais pas rep et autre
+# peut être changer genre peu pas commencerpar maj ou autre pour pas que ça empiète avec note
 def t_ID(t):
     r'[A-Za-z_]\w*'
-    print('LOL')
     if t.value in reserved_words:
         t.type = t.value.upper()
     return t
