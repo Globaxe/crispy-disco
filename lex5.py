@@ -6,26 +6,49 @@ Created on Wed Sep 27 09:19:51 2017
 """
 
 import ply.lex as lex
+from ply.lex import TOKEN
 
 reserved_words = (
-    'while',
-    'print'
+    'bpm',
+    'start',
+    'stop',
+    'rep',
+    'arp'
 )
+
+notes = (
+    'do',
+    're',
+    'mi',
+    'fa',
+    'sol',
+    'la',
+    'si',
+    'nop'
+)
+
+# notes avec chiffres
+# notes = [f"{x}{y}" for x in notes for y in range(0,9)]
 
 tokens =(
         'NUMBER',
-        'ADD_OP',
-        'MUL_OP',
+        'NOTE',
         'ID',
 )+ tuple(map(lambda s: s.upper(),reserved_words))
 
-t_ADD_OP = r'[+-]'
-t_MUL_OP = r'[/*]'
+# t_ADD_OP = r'[+-]'
+# t_MUL_OP = r'[/*]'
 
-literals = r'();={}'
+literals = r'();={}[],'
 
+@TOKEN('|'.join(notes))
+def t_NOTE(t):
+    return t
+
+# reconnais pas rep et autre
 def t_ID(t):
     r'[A-Za-z_]\w*'
+    print('LOL')
     if t.value in reserved_words:
         t.type = t.value.upper()
     return t
