@@ -102,3 +102,9 @@ ENV/
 
 # csound
 *.csd
+
+# compilo
+generated/
+
+# pycharm
+.idea/
