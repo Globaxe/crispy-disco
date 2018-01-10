@@ -117,12 +117,18 @@ class OpNode(Node):
     
 class AssignNode(Node):
     type = '='
-    
-class PrintNode(Node):
-    type = 'print'
-    
-class WhileNode(Node):
-    type = 'while'
+
+class AssignBlockNode(Node):
+    type = 'assignationBlock'
+
+class codeBlockNode(Node):
+    type = 'codeBlock'
+
+class RepNode(Node):
+    type = 'repete'
+
+class PlayNode(Node):
+    type = 'play'
     
 class EntryNode(Node):
     type = 'ENTRY'

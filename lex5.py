@@ -27,26 +27,32 @@ notes = (
     'nop'
 )
 
-# notes avec chiffres
-# notes = [f"{x}{y}" for x in notes for y in range(0,9)]
 
 tokens =(
         'NUMBER',
         'NOTE',
         'ID',
-)+ tuple(map(lambda s: s.upper(),reserved_words))
+        'SIGNAL',
+        'NEWLINE'
+) + tuple(map(lambda s: s.upper(),reserved_words))
 
 # t_ADD_OP = r'[+-]'
 # t_MUL_OP = r'[/*]'
 
 literals = r'();={}[],'
 
+notes = [note+str(i) for note in notes for i in range(1,9) if note != "nop"]
+
 
 @TOKEN(r'|'.join(notes))
 def t_NOTE(t):
     return t
 
-# peut être changer genre peu pas commencerpar maj ou autre pour pas que ça empiète avec note
+@TOKEN(r'|'.join(['sine','saw','pulse','square']))
+def t_SIGNAL(t):
+    return t
+
+# peut être changer genre peu pas commencer par maj ou autre pour pas que ça empiète avec note
 def t_ID(t):
     r'[A-Za-z_]\w*'
     if t.value in reserved_words:
@@ -58,9 +64,10 @@ def t_NUMBER(t):
     t.value = float(t.value)
     return t
 
-def t_newline(t):
+def t_NEWLINE(t):
     r'\n+'
     t.lexer.lineno+=len(t.value)
+    return t
 
 t_ignore = ' \t'
 
