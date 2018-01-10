@@ -9,64 +9,65 @@ import ply.yacc as yacc
 from lex5 import tokens
 import AST
 
-operations = {
+'''operations = {
         '+' : lambda x,y: x+y,
         '-' : lambda x,y: x-y,
         '*' : lambda x,y: x*y,
         '/' : lambda x,y: x/y,
-        }
+        }'''
 
 
 
-precedence = (
+'''precedence = (
         ('left', 'ADD_OP'),
         ('left', 'MUL_OP'),
         ('right', 'UMINUS'), #uminus n'est pas un token mais il permet de définir la précédence d'une expression
-)
+)'''
 
 
-def p_expression_programme_statement(p):
-    '''programme : statement'''
-    p[0]=AST.ProgramNode(p[1])
+def p_programme(p):
+    '''programme : assignationBlock START NEWLINE codeBlock STOP'''
+    p[0]=AST.ProgramNode([p[1],p[4]])
 
-def p_expression_programme_rec(p):
-    '''programme : statement ';' programme'''
-    p[0]=AST.ProgramNode([p[1]]+p[3].children)
+def p_codeBlock(p):
+    '''codeBlock : statement NEWLINE'''
+    p[0]=AST.codeBlockNode(p[1])
 
-def p_statement(p):
-    '''statement : structure
-    | assignation
-    | PRINT expression'''
-    try:
-        p[0]=AST.PrintNode(p[2])
-    except:
-        p[0]=p[1]
+def p_codeBlock_rec(p):
+    '''codeBlock : statement NEWLINE codeBlock'''
+    p[0]=AST.codeBlockNode([p[1]]+p[3].children)
 
-def p_structure(p):
-    '''structure : WHILE expression '{' programme '}' '''
-    p[0]=AST.WhileNode([p[2],p[4]])
+def p_assignation_block(p):
+    '''assignationBlock : assignation NEWLINE'''
+    p[0]= AST.AssignBlockNode(p[1])
+
+def p_assignation_block_rec(p):
+    '''assignationBlock : assignation NEWLINE assignationBlock'''
+    p[0]= AST.AssignBlockNode([p[1]]+p[3].children)
 
 def p_assignation(p):
     '''assignation : ID '=' expression'''
     p[0]=AST.AssignNode([AST.TokenNode(p[1]),p[3]])
 
-def p_expression_num(p):
-    '''expression : NUMBER
-    | ID'''
+def p_expression(p):
+    '''expression : ID
+    | SIGNAL
+    | NUMBER'''
     p[0]=AST.TokenNode(p[1])
 
-def p_expression_op(p):
-    '''expression : expression ADD_OP expression
-    | expression MUL_OP expression'''
-    p[0] = AST.OpNode(p[2],[p[1],p[3]])
+def p_statement(p):
+    '''statement : repetedBlock
+    | instrPlay'''
+    p[0]=p[1]
 
-def p_expression_parenthesis(p):
-    '''expression : '(' expression ')' '''
-    p[0] = p[2]
+def p_repetedBlock(p):
+    '''repetedBlock : REP '(' expression ')' NEWLINE '{' NEWLINE codeBlock '}' '''
+    p[0]=AST.RepNode([p[3],p[8]])
 
-def p_expression_uminus(p):
-    '''expression : ADD_OP expression %prec UMINUS'''    #%prec uminus permet de dire que ça précédence est de niveau uminus
-    p[0] = AST.OpNode(p[1],[p[2]])                       #donc très grande prio dans notre liste de précédence
+def p_instrPlay(p):
+    '''instrPlay : ID NOTE'''
+    p[0]=AST.PlayNode([AST.TokenNode(p[1]),AST.TokenNode(p[2])])
+
 
 def p_error(p):
     print ("Syntax error in line %d"%p.lineno)
