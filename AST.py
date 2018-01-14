@@ -121,6 +121,9 @@ class AssignNode(Node):
 class AssignBlockNode(Node):
     type = 'assignationBlock'
 
+class BPMNode(Node):
+    type = 'BPM'
+
 class codeBlockNode(Node):
     type = 'codeBlock'
 

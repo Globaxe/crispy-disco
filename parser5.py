@@ -50,6 +50,10 @@ def p_assignation(p):
     | ID '=' accord'''
     p[0]=AST.AssignNode([AST.TokenNode(p[1]),p[3]])
 
+def p_setBPM(p):
+    '''assignation : BPM '=' NUMBER'''
+    p[0] = AST.BPMNode(AST.TokenNode(p[3]))
+
 def p_accord(p):
     '''accord : '[' notelist ']' '''
     p[0] = AST.AccordNode(p[2])
