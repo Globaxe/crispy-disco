@@ -64,10 +64,10 @@ def p_notelist(p):
     notelist : NOTE
     '''
     if len(p) == 2:
-        p[0] = [AST.TokenNode(p[1])]
+        p[0] = [AST.NoteNode(p[1])]
     else:
         p[0] = p[1]
-        p[0].append(AST.TokenNode(p[3]))
+        p[0].append(AST.NoteNode(p[3]))
 
 def p_expression(p):
     '''expression : ID
@@ -85,10 +85,12 @@ def p_repetedBlock(p):
     p[0]=AST.RepNode([p[3],p[8]])
 
 def p_instrPlayNote(p):
-    '''instrPlay : ID NOTE
-    | ID ID'''
-    p[0]=AST.PlayNode([AST.TokenNode(p[1]),AST.TokenNode(p[2])])
+    '''instrPlay : ID NOTE'''
+    p[0]=AST.PlayNode([AST.TokenNode(p[1]),AST.NoteNode(p[2])])
 
+def p_instrPlayID(p):
+    '''instPlay : ID ID'''
+    p[0]=AST.PlayNode([AST.TokenNode(p[1]),AST.TokenNode(p[2])])
 
 def p_instrPlayAcc(p):
     '''instrPlay : ID accord'''

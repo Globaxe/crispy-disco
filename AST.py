@@ -103,7 +103,7 @@ class TokenNode(Node):
     def __repr__(self):
         return repr(self.tok)
 
-class OpNode(Node):
+'''class OpNode(Node):
     def __init__(self, op, children):
         Node.__init__(self,children)
         self.op = op
@@ -113,10 +113,20 @@ class OpNode(Node):
             self.nbargs = 1
 
     def __repr__(self):
-        return "%s (%s)" % (self.op, self.nbargs)
+        return "%s (%s)" % (self.op, self.nbargs)'''
 
 class AssignNode(Node):
     type = '='
+
+class NoteNode(Node):
+    type = 'note'
+    def __init__(self, note):
+        Node.__init__(self)
+        self.note = note[:2]
+        self.hauteur = note[2]
+
+    def __repr__(self):
+        return repr(self.note)+" "+repr(self.hauteur)
 
 class AssignBlockNode(Node):
     type = 'assignationBlock'
