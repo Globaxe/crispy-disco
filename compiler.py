@@ -1,4 +1,5 @@
 import AST
+import utils
 from AST import addToClass
 
 '''Valid opcodes are:
@@ -29,34 +30,35 @@ def compile(self):
     return compiled
 
 
-@addToClass(AST.PrintNode)
+@addToClass(AST.BPMNode)
 def compile(self):
-    return f"{self.children[0].compile()}PRINT\n"
+    settings.set_bpm(self.tok)
 
-@addToClass(AST.TokenNode)
+'''@addToClass(AST.TokenNode)
 def compile(self):
     if isinstance(self.tok,str):
         return f"PUSHV {self.tok}\n"
     else:
-        return f"PUSHC {self.tok}\n"
+        return f"PUSHC {self.tok}\n"'''
 
-@addToClass(AST.OpNode)
-def compile(self):
-    compiled=""
-    args = [c for c in self.children]
-    for arg in args:
-        compiled+=arg.compile()
-    if len(args)==1 and self.op =='-':
-        compiled+="USUB \n"
-    else:
-        compiled+=operations[self.op]+"\n"
-    return compiled
 
 @addToClass(AST.AssignNode)
 def compile(self):
-    return self.children[1].compile()+"SET "+self.children[0].tok+"\n"
+    if isinstance(self.children[0].type,"token"):
+        utils.addInstr(self.children[1].tok,self.children[0].tok)
+    else:
+        utils.addChord(self.children[1].tok,self.children[0].compile())
 
-@addToClass(AST.WhileNode)
+@addToClass(AST.AssignBlockNode)
+def compile(self):
+    for c in self.children:
+        c.compile()
+    return utils.d_starting()+utils.d_instruments()
+
+# start node et stop node ???
+
+
+'''@addToClass(AST.WhileNode)
 def compile(self):
     global nbCond
     nbCond+=1
@@ -66,7 +68,7 @@ def compile(self):
     compiled+="cond"+str(myCond)+": "
     compiled+=self.children[0].compile()
     compiled+="JINZ body"+str(myCond)+"\n"
-    return compiled
+    return compiled'''
 
 if __name__ == '__main__':
     from parser5 import parse
