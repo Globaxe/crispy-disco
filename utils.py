@@ -118,7 +118,7 @@ def d_arp_mult(repeat, instrName, dur, amp, chord, a, d, s, r, loops, inc, sta =
 instruments = list()
 offsets = list()
 settings = Settings()
-settings.bpm = 120
+# settings.bpm = 120
 #def d_chord(instrId, sta, dur, amp, chord, a, d, s, r):
 
 def d_end():
