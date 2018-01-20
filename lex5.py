@@ -23,11 +23,9 @@ notes = (
     'fa',
     'sol',
     'la',
-    'si',
-    'nop'
+    'si'
 )
 
-# nop utile ????????
 
 tokens =(
         'NUMBER',
@@ -37,8 +35,6 @@ tokens =(
         'NEWLINE'
 ) + tuple(map(lambda s: s.upper(),reserved_words))
 
-# t_ADD_OP = r'[+-]'
-# t_MUL_OP = r'[/*]'
 
 literals = r'();={}[],'
 
@@ -62,13 +58,17 @@ def t_ID(t):
 
 def t_NUMBER(t):
     r'\d+(\.\d+)?'
-    t.value = float(t.value)
+    t.value = int(t.value)
     return t
 
 def t_NEWLINE(t):
     r'\n+'
     t.lexer.lineno+=len(t.value)
     return t
+
+def t_comment(t):
+    r'\#.*\n*'
+    t.lexer.lineno+=t.value.count('\n')
 
 t_ignore = ' \t'
 

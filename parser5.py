@@ -9,25 +9,11 @@ import ply.yacc as yacc
 from lex5 import tokens
 import AST
 
-'''operations = {
-        '+' : lambda x,y: x+y,
-        '-' : lambda x,y: x-y,
-        '*' : lambda x,y: x*y,
-        '/' : lambda x,y: x/y,
-        }'''
-
-
-
-'''precedence = (
-        ('left', 'ADD_OP'),
-        ('left', 'MUL_OP'),
-        ('right', 'UMINUS'), #uminus n'est pas un token mais il permet de définir la précédence d'une expression
-)'''
-
 
 def p_programme(p):
-    '''programme : assignationBlock START NEWLINE codeBlock STOP'''
-    p[0]=AST.ProgramNode([p[1],p[4]])
+    '''programme : assignationBlock START NEWLINE codeBlock STOP NEWLINE'''
+    p[0]=AST.ProgramNode([p[1],AST.StartNode(),p[4],AST.StopNode()])
+
 
 def p_codeBlock(p):
     '''codeBlock : statement NEWLINE'''
@@ -89,7 +75,7 @@ def p_instrPlayNote(p):
     p[0]=AST.PlayNode([AST.TokenNode(p[1]),AST.NoteNode(p[2])])
 
 def p_instrPlayID(p):
-    '''instPlay : ID ID'''
+    '''instrPlay : ID ID'''
     p[0]=AST.PlayNode([AST.TokenNode(p[1]),AST.TokenNode(p[2])])
 
 def p_instrPlayAcc(p):

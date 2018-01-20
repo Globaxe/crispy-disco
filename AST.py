@@ -123,7 +123,7 @@ class NoteNode(Node):
     def __init__(self, note):
         Node.__init__(self)
         self.note = note[:2]
-        self.hauteur = note[2]
+        self.hauteur = int(note[2])
 
     def __repr__(self):
         return repr(self.note)+" "+repr(self.hauteur)
@@ -145,6 +145,12 @@ class PlayNode(Node):
 
 class AccordNode(Node):
     type = 'accord'
+
+class StartNode(Node):
+    type = 'start'
+
+class StopNode(Node):
+    type = 'stop'
 
 class EntryNode(Node):
     type = 'ENTRY'

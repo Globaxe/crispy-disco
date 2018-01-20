@@ -2,25 +2,6 @@ import AST
 import utils
 from AST import addToClass
 
-'''Valid opcodes are:
-
-    PUSHC <val>: pushes the constant value <val> on the execution stack
-    PUSHV <id>: pushes the value of the identifier <id> on the execution stack
-    SET <id>: pops a value from the stack and sets <id> accordingly
-    PRINT: pops a value from the stack and prints it.
-    ADD, SUB, MUL, DIV: pops two values from the stack and pushes their
-                sum, difference, product, quotient respectively.
-    USUB: Changes the sign of the number on the top of the stack.
-    JMP <tag>: jumps to <tag>
-    JIZ, JINZ <tag>: if the top of the stack is (not) zero, jumps to <tag>'''
-
-operations = {
-        '+' : 'ADD',
-        '-' : 'SUB',
-        '*' : 'MUL',
-        '/' : 'DIV',
-        }
-
 
 @addToClass(AST.ProgramNode)
 def compile(self):
@@ -32,43 +13,65 @@ def compile(self):
 
 @addToClass(AST.BPMNode)
 def compile(self):
-    settings.set_bpm(self.tok)
+    utils.settings.set_bpm(self.children[0].tok)
 
-'''@addToClass(AST.TokenNode)
+@addToClass(AST.codeBlockNode)
 def compile(self):
-    if isinstance(self.tok,str):
-        return f"PUSHV {self.tok}\n"
-    else:
-        return f"PUSHC {self.tok}\n"'''
-
+    compiled=""
+    for c in self.children:
+        compiled += c.compile()
+    return compiled
 
 @addToClass(AST.AssignNode)
 def compile(self):
-    if isinstance(self.children[0].type,"token"):
-        utils.addInstr(self.children[1].tok,self.children[0].tok)
-    else:
-        utils.addChord(self.children[1].tok,self.children[0].compile())
+    if self.children[1].type == "token":
+        utils.add_instr(self.children[0].tok,self.children[1].tok)
+    elif self.children[1].type == "accord":
+        utils.add_chord(self.children[0].tok,self.children[1].compile())
+    elif self.children[1].type == "BPM":
+        self.children[1].compile()
 
 @addToClass(AST.AssignBlockNode)
 def compile(self):
     for c in self.children:
         c.compile()
+    return ""
+
+@addToClass(AST.RepNode)
+def compile(self):
+    compiled = ""
+    for i in range(0,self.children[0].tok):
+        compiled+=self.children[1].compile()
+    return compiled
+
+@addToClass(AST.StartNode)
+def compile(self):
     return utils.d_starting()+utils.d_instruments()
 
-# start node et stop node ???
-
-
-'''@addToClass(AST.WhileNode)
+@addToClass(AST.StopNode)
 def compile(self):
-    global nbCond
-    nbCond+=1
-    myCond = nbCond
-    compiled ="JMP cond"+str(myCond)+"\nbody"+str(myCond)+": "
-    compiled+=self.children[1].compile()
-    compiled+="cond"+str(myCond)+": "
-    compiled+=self.children[0].compile()
-    compiled+="JINZ body"+str(myCond)+"\n"
-    return compiled'''
+    return utils.d_end()
+
+@addToClass(AST.AccordNode)
+def compile(self):
+    listNotes = []
+    for c in self.children:
+        listNotes.append(c.compile())
+    return utils.Chord(listNotes)
+
+@addToClass(AST.NoteNode)
+def compile(self):
+    return utils.Note(self.note,self.hauteur)
+
+@addToClass(AST.PlayNode)
+def compile(self):
+    if self.children[1].type == "note":
+        return utils.d_note(instrName=self.children[0].tok, dur=1.0, amp=10000.0, note=self.children[1].compile(), a=2.0, d=5.0, s=1.0, r=0.8, sta=1.0)
+    elif self.children[1].type == "accord":
+        return utils.d_chord(instrName=self.children[0].tok, dur=2.0, amp=10000.0, chord=self.children[1].compile(), a=5.0, d=20.0, s=5.0, r=2.5, sta=2.0)
+    elif self.children[1].type == "token":
+        return utils.d_chord(instrName=self.children[0].tok, dur=2.0, amp=10000.0, chord=self.children[1].tok, a=5.0, d=20.0, s=5.0, r=2.5, sta=2.0)
+
 
 if __name__ == '__main__':
     from parser5 import parse
@@ -78,7 +81,7 @@ if __name__ == '__main__':
     prog = open(sys.argv[1]).read()
     ast = parse(prog)
     bytecode = ast.compile()
-    name = os.path.splitext(sys.argv[1])[0]+'.vm'
+    name = os.path.splitext(sys.argv[1])[0]+'.csd'
     outfile = open(name,'w')
     outfile.write(bytecode)
     outfile.close()
