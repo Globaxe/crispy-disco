@@ -96,6 +96,8 @@ def d_chord(instrName, dur, amp, chord, a, d, s, r, sta=None):
     return string
 
 def d_arp(instrName, dur, amp, chord, a, d, s, r, loops, inc, sta = None):
+    if isinstance(chord,str):
+        chord = chordsName[chord]
     chord_cpy = copy.deepcopy(chord)
     string = ""
     offset = 0

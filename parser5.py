@@ -63,12 +63,21 @@ def p_expression(p):
 
 def p_statement(p):
     '''statement : repetedBlock
-    | instrPlay'''
+    | instrPlay
+    | Arpegiator'''
     p[0]=p[1]
 
+# number a la place d'expression ?
 def p_repetedBlock(p):
     '''repetedBlock : REP '(' expression ')' NEWLINE '{' NEWLINE codeBlock '}' '''
     p[0]=AST.RepNode([p[3],p[8]])
+
+# number a la place d'expression ?
+# ajouter accord à expression
+def p_ArpegiatorAcc(p):
+    '''Arpegiator : ARP '(' expression ',' accord ',' expression ')'
+    | Arpegiator : ARP '(' expression ',' expression ',' expression ')' '''
+    p[0]=AST.ArpNode([p[3],p[5],p[7]])
 
 def p_instrPlayNote(p):
     '''instrPlay : ID NOTE'''

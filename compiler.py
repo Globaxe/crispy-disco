@@ -68,10 +68,16 @@ def compile(self):
     if self.children[1].type == "note":
         return utils.d_note(instrName=self.children[0].tok, dur=1.0, amp=10000.0, note=self.children[1].compile(), a=2.0, d=5.0, s=1.0, r=0.8, sta=1.0)
     elif self.children[1].type == "accord":
-        return utils.d_chord(instrName=self.children[0].tok, dur=2.0, amp=10000.0, chord=self.children[1].compile(), a=5.0, d=20.0, s=5.0, r=2.5, sta=2.0)
+        return utils.d_chord(instrName=self.children[0].tok, dur=1.0, amp=10000.0, chord=self.children[1].compile(), a=5.0, d=20.0, s=5.0, r=2.5, sta=2.0)
     elif self.children[1].type == "token":
-        return utils.d_chord(instrName=self.children[0].tok, dur=2.0, amp=10000.0, chord=self.children[1].tok, a=5.0, d=20.0, s=5.0, r=2.5, sta=2.0)
+        return utils.d_chord(instrName=self.children[0].tok, dur=1.0, amp=10000.0, chord=self.children[1].tok, a=5.0, d=20.0, s=5.0, r=2.5, sta=2.0)
 
+@addToClass(AST.ArpNode)
+def compile(self):
+    if self.children[1].type == "accord":
+        return utils.d_arp(instrName=self.children[0].tok, dur=1.0, amp=10000.0, chord=self.children[1].compile(),a=5.0, d=20.0, s=5.0, r=2.5, sta=2.0,loops=self.children[2].tok)
+    elif self.children[1].type == "token":
+        return utils.d_arp(instrName=self.children[0].tok, dur=1.0, amp=10000.0, chord=self.children[1].tok,a=5.0, d=20.0, s=5.0, r=2.5, sta=2.0,loops=self.children[2].tok)
 
 if __name__ == '__main__':
     from parser5 import parse

@@ -140,6 +140,9 @@ class codeBlockNode(Node):
 class RepNode(Node):
     type = 'repete'
 
+class ArpNode(Node):
+    type = 'arp'
+
 class PlayNode(Node):
     type = 'play'
 
