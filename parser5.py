@@ -74,9 +74,9 @@ def p_repetedBlock(p):
 
 # number a la place d'expression ?
 # ajouter accord à expression
-def p_ArpegiatorAcc(p):
+def p_Arpegiator(p):
     '''Arpegiator : ARP '(' expression ',' accord ',' expression ')'
-    | Arpegiator : ARP '(' expression ',' expression ',' expression ')' '''
+    | ARP '(' expression ',' expression ',' expression ')' '''
     p[0]=AST.ArpNode([p[3],p[5],p[7]])
 
 def p_instrPlayNote(p):

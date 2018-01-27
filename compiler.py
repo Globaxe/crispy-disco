@@ -75,9 +75,9 @@ def compile(self):
 @addToClass(AST.ArpNode)
 def compile(self):
     if self.children[1].type == "accord":
-        return utils.d_arp(instrName=self.children[0].tok, dur=1.0, amp=10000.0, chord=self.children[1].compile(),a=5.0, d=20.0, s=5.0, r=2.5, sta=2.0,loops=self.children[2].tok)
+        return utils.d_arp(instrName=self.children[0].tok, dur=1.0, amp=10000.0, chord=self.children[1].compile(),a=5.0, d=20.0, s=5.0, r=2.5, sta=2.0,loops=self.children[2].tok, inc=1)
     elif self.children[1].type == "token":
-        return utils.d_arp(instrName=self.children[0].tok, dur=1.0, amp=10000.0, chord=self.children[1].tok,a=5.0, d=20.0, s=5.0, r=2.5, sta=2.0,loops=self.children[2].tok)
+        return utils.d_arp(instrName=self.children[0].tok, dur=1.0, amp=10000.0, chord=self.children[1].tok,a=5.0, d=20.0, s=5.0, r=2.5, sta=2.0,loops=self.children[2].tok, inc=1)
 
 if __name__ == '__main__':
     from parser5 import parse

@@ -103,7 +103,7 @@ def d_arp(instrName, dur, amp, chord, a, d, s, r, loops, inc, sta = None):
     offset = 0
     for i in range(loops):
         for j in range(0, len(chord_cpy.notes)):
-            string += d_note(intstrNameId[instrName], dur, amp, chord_cpy.notes[j],  a, d, s, r, sta + offset)
+            string += d_note(instrName, dur, amp, chord_cpy.notes[j],  a, d, s, r, sta + offset)
             offset += dur
         for k in range(len(chord_cpy.notes)):
             chord_cpy.notes[k].octave += inc
