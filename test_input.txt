@@ -1,0 +1,18 @@
+BPM = 10
+I_1 = square
+I_2 = sine
+caca = [ do4, do6 ,mi4 ]
+pipi = [ re4 ]
+
+START
+    REP(2)
+    {
+    I_1 do4
+    I_2 mi5
+    I_1 fa6
+    I_2 caca
+    I_2 [ do5, mi5 ]
+    }
+    ARP(I_1,caca,2)
+    ARP(I_2,[do4, do6, mi4],2)
+STOP
