@@ -112,6 +112,11 @@ class NoteNode(Node):
         Node.__init__(self)
         if note[2]=="#":
             self.note = note[:3]
+        elif note[2]=="l":
+            if note[3]=="#":
+                self.note = note[:4]
+            else:
+                self.note = note[:3]
         else:
             self.note = note[:2]
         self.hauteur = int(note[-1])
