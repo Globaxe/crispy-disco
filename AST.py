@@ -103,18 +103,6 @@ class TokenNode(Node):
     def __repr__(self):
         return repr(self.tok)
 
-'''class OpNode(Node):
-    def __init__(self, op, children):
-        Node.__init__(self,children)
-        self.op = op
-        try:
-            self.nbargs = len(children)
-        except AttributeError:
-            self.nbargs = 1
-
-    def __repr__(self):
-        return "%s (%s)" % (self.op, self.nbargs)'''
-
 class AssignNode(Node):
     type = '='
 
@@ -122,8 +110,11 @@ class NoteNode(Node):
     type = 'note'
     def __init__(self, note):
         Node.__init__(self)
-        self.note = note[:2]
-        self.hauteur = int(note[2])
+        if note[2]=="#":
+            self.note = note[:3]
+        else:
+            self.note = note[:2]
+        self.hauteur = int(note[-1])
 
     def __repr__(self):
         return repr(self.note)+" "+repr(self.hauteur)
@@ -154,6 +145,15 @@ class StartNode(Node):
 
 class StopNode(Node):
     type = 'stop'
+
+class PauseNode(Node):
+    type = 'pause'
+
+class SignNode(Node):
+    type = 'sign'
+    def __init__(self, sign):
+        Node.__init__(self)
+        self.sign = sign
 
 class EntryNode(Node):
     type = 'ENTRY'

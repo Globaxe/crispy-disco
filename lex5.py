@@ -13,17 +13,25 @@ reserved_words = (
     'START',
     'STOP',
     'REP',
-    'ARP'
+    'ARP',
+    'PAUSE',
 )
 
 notes = (
     'do',
+    'do\#',
     're',
+    're\#',
     'mi',
+    'mi\#',
     'fa',
+    'fa\#',
     'sol',
+    'sol\#',
     'la',
-    'si'
+    'la\#',
+    'si',
+    'si\#'
 )
 
 
@@ -36,10 +44,9 @@ tokens =(
 ) + tuple(map(lambda s: s.upper(),reserved_words))
 
 
-literals = r'();={}[],'
+literals = r'();={}[],+-'
 
-notes = [note+str(i) for note in notes for i in range(1,9) if note != "nop"]
-
+notes = [note+str(i) for note in notes for i in range(1,9)]
 
 @TOKEN(r'|'.join(notes))
 def t_NOTE(t):

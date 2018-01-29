@@ -75,9 +75,11 @@ def p_repetedBlock(p):
 # number a la place d'expression ?
 # ajouter accord à expression
 def p_Arpegiator(p):
-    '''Arpegiator : ARP '(' expression ',' accord ',' expression ')'
-    | ARP '(' expression ',' expression ',' expression ')' '''
-    p[0]=AST.ArpNode([p[3],p[5],p[7]])
+    '''Arpegiator : ARP '(' expression ',' accord ',' expression ',' '+' ')'
+    | ARP '(' expression ',' accord ',' expression ',' '-' ')'
+    | ARP '(' expression ',' expression ',' expression ',' '+' ')'
+    | ARP '(' expression ',' expression ',' expression ',' '-' ')' '''
+    p[0]=AST.ArpNode([p[3],p[5],p[7],AST.SignNode(p[9])])
 
 def p_instrPlayNote(p):
     '''instrPlay : ID NOTE'''
@@ -90,6 +92,10 @@ def p_instrPlayID(p):
 def p_instrPlayAcc(p):
     '''instrPlay : ID accord'''
     p[0]=AST.PlayNode([AST.TokenNode(p[1]),p[2]])
+
+def p_instrPause(p):
+    '''instrPlay : ID PAUSE'''
+    p[0]=AST.PlayNode([AST.TokenNode(p[1]),AST.PauseNode()])
 
 def p_error(p):
     print ("Syntax error in line %d"%p.lineno)
