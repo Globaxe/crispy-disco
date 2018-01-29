@@ -3,7 +3,7 @@
   I_2 = square
 
   chord1 = [ la7, do8, mi8, sol8]
-  chord2 = [ sol7, la#7, re8, fa8]
+  chord2 = [ sol7, si7, re8, fa#8]
   chord3 = [ la#7, re8, fa8, la8]
   chord4 = [ fa7, la7, do8, mi8]
 
@@ -31,5 +31,4 @@
     I_2 chord4
     }
   }
-
   STOP

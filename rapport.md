@@ -125,14 +125,21 @@ def p_notelist(p):
 
 ### AST et compiler
 
-Dans l'AST, nous avons ajouté beaucoups de noeud dont seulement le type change afin de simplifier l'utilisation de notre compiler. Le seul noeud intéressant est le noeud note qui stock la note et l'octave :
+Dans l'AST, nous avons ajouté beaucoups de noeud dont seulement le type change afin de simplifier l'utilisation de notre compiler. Le seul noeud intéressant est le noeud note qui stock la note et l'octave en fonction :
 ```python
 class NoteNode(Node):
     type = 'note'
     def __init__(self, note):
         Node.__init__(self)
+        # gestion des bémoles
         if note[2]=="#":
             self.note = note[:3]
+        # gestion du sol
+        elif note[2]=="l":
+            if note[3]=="#":
+                self.note = note[:4]
+            else:
+                self.note = note[:3]
         else:
             self.note = note[:2]
         self.hauteur = int(note[-1])
@@ -174,7 +181,6 @@ Déclaration d'une boucle for :
     # permet de définir une pause d'un temps pour un instrument
     I_1 PAUSE
     I_1 fa6
-    Bidule mi6
     I_2 moican
     I_1 narval
     # Les accords peuvent également être déclarés inline
