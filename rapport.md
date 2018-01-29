@@ -282,3 +282,50 @@ def d_arp(instrName, dur, amp, chord, a, d, s, r, loops, inc, sta = None):
 def d_end():
   #...
 ```
+
+### Exemple d'input :
+
+```
+BPM = 60
+I_1 = square
+I_2 = square
+
+chord1 = [ la7, do8, mi8, sol8]
+chord2 = [ sol7, si7, re8, fa#8]
+chord3 = [ la#7, re8, fa8, la8]
+chord4 = [ fa7, la7, do8, mi8]
+
+START
+REP(4)
+{
+  REP(4)
+  {
+  I_1 la6
+  I_2 chord1
+  }
+  REP(4)
+  {
+  I_1 mi6
+  I_2 chord2
+  }
+  REP(4)
+  {
+  I_1 sol6
+  I_2 chord3
+  }
+  REP(4)
+  {
+  I_1 re6
+  I_2 chord4
+  }
+}
+STOP
+```
+
+###
+
+### Compilation
+
+```bash
+> python compiler input.txt
+```
