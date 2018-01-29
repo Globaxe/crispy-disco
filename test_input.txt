@@ -13,6 +13,6 @@ START
     I_2 caca
     I_2 [ do5, mi5 ]
     }
-    ARP(I_1,caca,2)
-    ARP(I_2,[do4, do6, mi4],2)
+    ARP(I_1,caca,2,+)
+    ARP(I_2,[do4, do6, mi4],2,-)
 STOP
