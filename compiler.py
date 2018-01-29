@@ -90,7 +90,7 @@ def compile(self):
 
 
 if __name__ == '__main__':
-    from parser5 import parse
+    from parsor import parse
     import sys, os
     bytecode = ""
     prog = open(sys.argv[1]).read()
