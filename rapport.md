@@ -49,10 +49,10 @@ i ...
 
 ### Analyseur lexical
 
-Pour développer l'Analyseur lexical nous nous sommes basé sur le fichier lex5.py
+Pour développer l'Analyseur lexical, nous nous sommes basé sur le fichier lex5.py
 développer dans les tp du cours de compilateur.
 
-Afin de gérer les notes sans trop se compliquer la vie nous avons utilisé une liste de notes à laquelle nous avons ajouté un chiffre de 1 à 9 correspondant à l'octave. Finalement nous utilisons la fonction `join()` pour créer une regexp facilement grace au décorateur `@TOKEN` car on ne peut pas le faire directement dans la docstring.
+Afin de gérer les notes sans trop se compliquer la vie, nous avons utilisé une liste de notes à laquelle nous avons ajouté un chiffre de 1 à 9 correspondant à l'octave. Finalement, nous utilisons la fonction `join()` pour créer une regexp facilement grace au décorateur `@TOKEN` car on ne peut pas le faire directement dans la docstring.
 
 ```python
 notes = (
@@ -79,7 +79,7 @@ def t_NOTE(t):
     return t
 ```
 
-Notre code ne possédant pas de marqueur de fin de ligne nous avons créé un un token `t_NEWLINE` qui permet de reconnaitre une ou plusieurs fin de lignes.
+Notre code ne possédant pas de marqueur de fin de ligne, nous avons créé un un token `t_NEWLINE` qui permet de reconnaitre une ou plusieurs fin de lignes.
 
 ```python
 def t_NEWLINE(t):
@@ -98,11 +98,78 @@ def t_comment(t):
 
 ### Parseur
 
-todo
+Pour le parseur,le code se sépare en deux partie. Les assignations et le code à proprement parlé. L règle programme ressemble donc à ça :
+```python
+def p_programme(p):
+    '''programme : assignationBlock START NEWLINE codeBlock STOP NEWLINE'''
+    p[0]=AST.ProgramNode([p[1],AST.StartNode(),p[4],AST.StopNode()])
+```
+
+Pour l'assignation d'accord, sachant qu'une liste de notes peut être de taille variable nous avons utilisé un règle récursive permettant de gérer le nombre de notes que l'on veut pour un accord:
+```python
+def p_notelist(p):
+    '''
+    notelist : notelist ',' NOTE
+    notelist : NOTE
+    '''
+    if len(p) == 2:
+        p[0] = [AST.NoteNode(p[1])]
+    else:
+        p[0] = p[1]
+        p[0].append(AST.NoteNode(p[3]))
+```
+
+### AST
+
+Dans l'AST, nous avons ajouté beaucoups de noeud dont seulement le type change
 
 ### Syntaxe
 
-todo
+Déclaration du BPM et des instruments :
+```python
+BPM = 110
+I_1 = square
+I_2 = sine
+```
+Déclaration d'accords :
+```python
+moican = [ do4, do6 ,mi4 ]
+narval = [ re6, fa6, la6, do7, mi7]
+```
+
+Déclaration du début de la partition
+```python
+  START
+```
+
+Déclaration d'une boucle for :
+```python
+    REP(2)
+    {
+    I_1 do4
+    I_2 mi5
+    I_1 fa6
+    I_2 moican
+    I_1 narval
+    # Les accords peuvent également être décarés inline
+    I_2 [ do5, mi5 ]
+    }
+```
+
+Déclaration d'un arpège :
+```python
+# deux octaves, montant :
+ARP(I_1,moican,2,+)
+#inline, descendant
+ARP(I_2,[do4, do6, mi4],2,-)
+```
+
+
+
+
+Les instruments doivent être impérativement déclarés avant de commencer une partition, afin de respecter le fonctionnement de cSound (il ne s'agit là que d'un wrapper, en somme).
+
+
 
 ### Partie métier
 
