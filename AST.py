@@ -110,8 +110,10 @@ class NoteNode(Node):
     type = 'note'
     def __init__(self, note):
         Node.__init__(self)
+        # gestion des bémoles
         if note[2]=="#":
             self.note = note[:3]
+        # gestion du sol
         elif note[2]=="l":
             if note[3]=="#":
                 self.note = note[:4]
