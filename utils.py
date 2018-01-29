@@ -1,4 +1,5 @@
 import copy
+from subprocess import call
 
 instr_id = 1
 
@@ -138,6 +139,7 @@ if __name__ == '__main__':
     string += d_arp('coucou', 1.0, 10000.0, testChord, 1.0, 1.0, 1.0, 1.0, 8, -1)
     string += d_end()
 
-
     with open('test.cs', 'w') as f:
         f.write(string)
+
+    call(["csound", "test.cs"])
