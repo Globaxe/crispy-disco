@@ -6,7 +6,7 @@ Created on Wed Sep 27 10:06:43 2017
 """
 
 import ply.yacc as yacc
-from lex5 import tokens
+from lex import tokens
 import AST
 
 
