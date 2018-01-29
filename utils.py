@@ -94,10 +94,11 @@ def wait(instrName, dur):
 def d_chord(instrName, dur, amp, chord, a, d, s, r, sta=None):
     string = ""
     instruments[intstrNameId[instrName]-1].offset += dur
+    divided_amp = amp / len(chord)
     if isinstance(chord,str):
         chord = chordsName[chord]
     for i in range(0, len(chord.notes)):
-            string += d_note(instrName, dur, amp, chord.notes[i],  a, d, s, r, sta, chord=True)
+            string += d_note(instrName, dur, divided_amp, chord.notes[i],  a, d, s, r, sta, chord=True)
     return string
 
 def d_arp(instrName, dur, amp, chord, a, d, s, r, loops, inc, sta = None):

@@ -67,11 +67,11 @@ def compile(self):
 @addToClass(AST.PlayNode)
 def compile(self):
     if self.children[1].type == "note":
-        return utils.d_note(instrName=self.children[0].tok, dur=1.0, amp=10000.0, note=self.children[1].compile(), a=2.0, d=5.0, s=1.0, r=0.8)
+        return utils.d_note(instrName=self.children[0].tok, dur=1.0, amp=10000.0, note=self.children[1].compile(), a=1.0, d=5.0, s=1.0, r=0.8)
     elif self.children[1].type == "accord":
-        return utils.d_chord(instrName=self.children[0].tok, dur=1.0, amp=10000.0, chord=self.children[1].compile(), a=5.0, d=20.0, s=5.0, r=2.5)
+        return utils.d_chord(instrName=self.children[0].tok, dur=1.0, amp=10000.0, chord=self.children[1].compile(), a=1.0, d=20.0, s=5.0, r=2.5)
     elif self.children[1].type == "token":
-        return utils.d_chord(instrName=self.children[0].tok, dur=1.0, amp=10000.0, chord=self.children[1].tok, a=5.0, d=20.0, s=5.0, r=2.5)
+        return utils.d_chord(instrName=self.children[0].tok, dur=1.0, amp=10000.0, chord=self.children[1].tok, a=1.0, d=20.0, s=5.0, r=2.5)
     elif self.children[1].type == "pause":
         wait(instrName=self.children[0].tok,dur=1.0)
 
