@@ -31,6 +31,7 @@ class Instrument():
     def __init__(self, id, type):
         self.id = id
         self.type = type
+        self.offset = 0
 
 class Note():
     def __init__(self, key, octave):
@@ -75,24 +76,26 @@ def d_instruments():
         print("Error : No instruments declared")
     return string
 
-def d_note(instrName, dur, amp, note, a, d, s, r, sta=None):
-    offsets[intstrNameId[instrName]-1] += dur
-    print("sta", sta*settings.dt)
-    print("dur", dur*settings.dt)
+def d_note(instrName, dur, amp, note, a, d, s, r, sta=None, chord=False):
     if sta == None:
-            return "i {:d} + {:.2f} {:.2f} {:d}.{:s} {:.2f} {:.2f} {:.2f} {:.2f}\n".format(intstrNameId[instrName], dur*settings.dt, amp, note.octave, keys[note.key], a, d, s, r)
+        if chord == False:
+            instruments[intstrNameId[instrName]-1].offset += dur
+        return "i {:d} {:.2f} {:.2f} {:.2f} {:d}.{:s} {:.2f} {:.2f} {:.2f} {:.2f}\n".format(intstrNameId[instrName], instruments[intstrNameId[instrName]-1].offset * settings.dt, dur*settings.dt, amp, note.octave, keys[note.key], a, d, s, r)
     elif sta == 0:
         return "i {:d} 0 {:.2f} {:.2f} {:d}.{:s} {:.2f} {:.2f} {:.2f} {:.2f}\n".format(intstrNameId[instrName], dur*settings.dt, amp, note.octave, keys[note.key], a, d, s, r)
     else:
         return "i {:d} {:.2f} {:f} {:.2f} {:d}.{:s} {:.2f} {:.2f} {:.2f} {:.2f}\n".format(intstrNameId[instrName], sta*settings.dt, dur*settings.dt, amp, note.octave, keys[note.key], a, d, s, r)
 
+def wait(instrName, dur):
+    instruments[intstrNameId[instrName]].offset += dur
+
 def d_chord(instrName, dur, amp, chord, a, d, s, r, sta=None):
     string = ""
+    instruments[intstrNameId[instrName]-1].offset += dur
     if isinstance(chord,str):
         chord = chordsName[chord]
-
     for i in range(0, len(chord.notes)):
-            string += d_note(instrName, dur, amp, chord.notes[i],  a, d, s, r, sta)
+            string += d_note(instrName, dur, amp, chord.notes[i],  a, d, s, r, sta, chord=True)
     return string
 
 def d_arp(instrName, dur, amp, chord, a, d, s, r, loops, inc, sta = None):
@@ -103,20 +106,12 @@ def d_arp(instrName, dur, amp, chord, a, d, s, r, loops, inc, sta = None):
     offset = 0
     for i in range(loops):
         for j in range(0, len(chord_cpy.notes)):
-            string += d_note(instrName, dur, amp, chord_cpy.notes[j],  a, d, s, r, sta + offset)
+            string += d_note(instrName, dur, amp, chord_cpy.notes[j],  a, d, s, r)
             offset += dur
         for k in range(len(chord_cpy.notes)):
             chord_cpy.notes[k].octave += inc
     return string
-'''
-def d_arp_mult(repeat, instrName, dur, amp, chord, a, d, s, r, loops, inc, sta = None):
-    string = ""
-    offset = 0
-    for i in range(repeat):
-        string += d_arp(intstrNameId[instrName], dur, amp, chord, a, d, s, r, loops, inc, sta = None)
-        offset += repeat * dur
-    return string
-'''
+
 instruments = list()
 offsets = list()
 settings = Settings()
@@ -130,25 +125,17 @@ if __name__ == '__main__':
     testChord = Chord([Note('mi', 7), Note('do', 7), Note('sol', 7)])
 
     string = ""
-    add_instr(1, 'saw')
-    add_instr(2, 'sine')
-    add_instr(3, 'square')
+    add_instr('coucou', 'saw')
     string += d_starting()
     string += d_instruments()
     settings.set_bpm(120)
-
-    #string += d_note(instrId=1, dur=4.0, amp=5000.0, note=Note('la', 7), a=2.0, d=5.0, s=1.0, r=2.5, sta=0)
-    #string += d_note(instrId=1, dur=4.0, amp=5000.0, note=Note('mi', 8), a=2.0, d=5.0, s=1.0, r=2.5, sta=0)
-    #string += d_note(instrId=1, dur=4.0, amp=5000.0, note=Note('mi', 8), a=2.0, d=5.0, s=1.0, r=2.5, sta=0)
-    #string += d_note(instrId=2, dur=4.0, amp=5000.0, note=Note('la', 8), a=2.0, d=5.0, s=1.0, r=2.5, sta=4.0)
-    #string += d_note(instrId=2, dur=4.0, amp=5000.0, note=Note('do', 8), a=2.0, d=5.0, s=1.0, r=2.5, sta=4.0)
-    string += d_note(instrId=1, dur=8.0, amp=10000.0, note=Note('la', 5), a = 3.0, d = 6.0, s = 1.0, r = 1.5, sta = 0.0)
-    string += d_arp(3, 0.25, 20000.0, testChord, 1.0, 1.0, 1.0, 1.0, 4, 1, 0.0)
-    string += d_arp(3, 0.25, 20000.0, testChord, 1.0, 1.0, 1.0, 1.0, 4, 1, 2.0)
-    string += d_arp(3, 0.25, 20000.0, testChord, 1.0, 1.0, 1.0, 1.0, 4, 1, 4.0)
-    string += d_arp(3, 0.25, 20000.0, testChord, 1.0, 1.0, 1.0, 1.0, 4, 1, 6.0)
-    string += d_arp(3, 0.25, 20000.0, testChord, 1.0, 1.0, 1.0, 1.0, 4, 1, 8.0)
-    string += d_chord(1, 5.0, 10000.0, testChord, 2.0, 5.0, 1.0, 1.0, 4.0)
+    string += d_note(instrName='coucou', dur=3.0, amp=10000.0, note=Note('la', 5), a = 1.0, d = 6.0, s = 1.0, r = 1.5)
+    string += d_note(instrName='coucou', dur=3.0, amp=10000.0, note=Note('la', 6), a = 1.0, d = 6.0, s = 1.0, r = 1.5)
+    string += d_note(instrName='coucou', dur=3.0, amp=10000.0, note=Note('la', 5), a = 1.0, d = 6.0, s = 1.0, r = 1.5)
+    string += d_note(instrName='coucou', dur=3.0, amp=10000.0, note=Note('la', 6), a = 1.0, d = 6.0, s = 1.0, r = 1.5)
+    string += d_chord('coucou', 3.0, 10000.0, testChord, 2.0, 5.0, 1.0, 1.0)
+    string += d_arp('coucou', 1.0, 10000.0, testChord, 1.0, 1.0, 1.0, 1.0, 8, 1)
+    string += d_arp('coucou', 1.0, 10000.0, testChord, 1.0, 1.0, 1.0, 1.0, 8, -1)
     string += d_end()
 
 
