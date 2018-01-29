@@ -145,11 +145,13 @@ Pour ce qui est du compiler nous nous sommes beaucoup simplifié la vie avec le 
 
 ### Syntaxe
 
-Déclaration du BPM et des instruments :
+Déclaration du BPM et des instruments (trois types : square, sine, saw, pulse) :
 ```python
 BPM = 110
 I_1 = square
 I_2 = sine
+Machin = saw
+Bidule = pulse
 ```
 Déclaration d'accords :
 ```python
@@ -157,9 +159,10 @@ moican = [ do4, do6 ,mi4 ]
 narval = [ re6, fa6, la6, do7, mi7]
 ```
 
-Déclaration du début de la partition
+Déclaration du début et de la fin de la partition :
 ```python
   START
+  END
 ```
 
 Déclaration d'une boucle for :
@@ -171,6 +174,7 @@ Déclaration d'une boucle for :
     # permet de définir une pause d'un temps pour un instrument
     I_1 PAUSE
     I_1 fa6
+    Bidule mi6
     I_2 moican
     I_1 narval
     # Les accords peuvent également être déclarés inline
