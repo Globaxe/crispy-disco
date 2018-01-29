@@ -119,9 +119,25 @@ def p_notelist(p):
         p[0].append(AST.NoteNode(p[3]))
 ```
 
-### AST
+### AST et compiler
 
-Dans l'AST, nous avons ajouté beaucoups de noeud dont seulement le type change
+Dans l'AST, nous avons ajouté beaucoups de noeud dont seulement le type change afin de simplifier l'utilisation de notre compiler. Le seul noeud intéressant est le noeud note qui stock la note et l'octave :
+```python
+class NoteNode(Node):
+    type = 'note'
+    def __init__(self, note):
+        Node.__init__(self)
+        if note[2]=="#":
+            self.note = note[:3]
+        else:
+            self.note = note[:2]
+        self.hauteur = int(note[-1])
+
+    def __repr__(self):
+        return repr(self.note)+" "+repr(self.hauteur)
+```
+
+Pour ce qui est du compiler nous nous sommes beaucoup simplifié la vie avec le fichier `utils.py` qui à permis une très bonne abstraction du code. La plupart du code ajouté dans les noeuds se résume principalement à des if avec des appels aux fonctions du fichier `utils.py`
 
 ### Syntaxe
 
@@ -148,10 +164,12 @@ Déclaration d'une boucle for :
     {
     I_1 do4
     I_2 mi5
+    # permet de définir une pause d'un temps pour un instrument
+    I_1 PAUSE
     I_1 fa6
     I_2 moican
     I_1 narval
-    # Les accords peuvent également être décarés inline
+    # Les accords peuvent également être déclarés inline
     I_2 [ do5, mi5 ]
     }
 ```
@@ -167,7 +185,7 @@ ARP(I_2,[do4, do6, mi4],2,-)
 
 
 
-Les instruments doivent être impérativement déclarés avant de commencer une partition, afin de respecter le fonctionnement de cSound (il ne s'agit là que d'un wrapper, en somme).
+Les instruments doivent être impérativement déclarés avant de commencer une partition, afin de respecter le fonctionnement de cSound (il ne s'agit là que d'un wrapper, en somme). A noter que les commentaires commençant par un `#` sont géré par notre compilateur
 
 
 
