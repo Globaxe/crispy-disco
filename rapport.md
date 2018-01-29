@@ -50,9 +50,57 @@ i ...
 ### Analyseur lexical
 
 Pour développer l'Analyseur lexical nous nous sommes basé sur le fichier lex5.py
-développer dans les tp du cours de compilateur
+développer dans les tp du cours de compilateur.
+
+Afin de gérer les notes sans trop se compliquer la vie nous avons utilisé une liste de notes à laquelle nous avons ajouté un chiffre de 1 à 9 correspondant à l'octave. Finalement nous utilisons la fonction `join()` pour créer une regexp facilement grace au décorateur `@TOKEN` car on ne peut pas le faire directement dans la docstring.
+
+```python
+notes = (
+    'do',
+    'do\#',
+    're',
+    're\#',
+    'mi',
+    'mi\#',
+    'fa',
+    'fa\#',
+    'sol',
+    'sol\#',
+    'la',
+    'la\#',
+    'si',
+    'si\#'
+)
+
+notes = [note+str(i) for note in notes for i in range(1,9)]
+
+@TOKEN(r'|'.join(notes))
+def t_NOTE(t):
+    return t
+```
+
+Notre code ne possédant pas de marqueur de fin de ligne nous avons créé un un token `t_NEWLINE` qui permet de reconnaitre une ou plusieurs fin de lignes.
+
+```python
+def t_NEWLINE(t):
+    r'\n+'
+    t.lexer.lineno+=len(t.value)
+    return t
+```
+
+Nous avons aussi utilisé un token `t_comment` permettant de reconnaitre les commentaires sur une ligne commençant par `#`. Par contre, les commentaires multilignes ne sont pas implémentés.
+
+```python
+def t_comment(t):
+    r'\#.*\n*'
+    t.lexer.lineno+=t.value.count('\n')
+ ```
 
 ### Parseur
+
+todo
+
+### Syntaxe
 
 todo
 
@@ -71,18 +119,72 @@ class Instrument():
 ```
 
 à chaque fois qu'un instrument joue une note, son offset est augmenté.
-les trois fonctions principales sont les suivantes :
+
+Les classes suivantes sont également présente pour stocker les réglages, notes et accords déclarés :
 
 ```python
-# Retourne un string comportant la déclaration de tous les instruments précédemments déclarés, ainsi que leur type
+class Settings():
+    def __init__(self):
+        self.bpm = 120
+        self.dt = 0.5
+
+    def set_bpm(self, bpm):
+        self.bpm = bpm
+        self.dt = 60/self.bpm
+
+class Note():
+    def __init__(self, key, octave):
+        self.key = key
+        self.octave = octave
+
+class Chord():
+    def __init__(self, notes):
+        self.notes = notes
+```
+
+les fonctions principales sont les suivantes :
+
+```python
+
+''' Fonctionnel '''
+# Ajoute un instrument. Types disponibles : sine, square, saw, pulse
+def add_instr(name, type):
+  # ...
+
+# Force un instrument à faire une pause spécifiée par le paramètre dur
+def wait(instrName, dur):
+  # ...
+
+''' Génération de string '''
+# Retourne un string comportant la déclaration de base d'une partition cSound.
+def d_starting():
+
+# Retourne un string comportant la déclaration de tous les
+# instruments précédemments déclarés, ainsi que leur type.
+# Doit être appellée au début du fichier.
 def d_instruments():
   # ...
 
 # Retourne un string comportant la déclaration d'une note unique.
-# Les paramètres a, d, s, r ne sont pour l'instant pas utilisés mais définissent la
-# forme d'onde d'une note.
-# le paramètre chord est utilisé pour évité l'incrémentation de l'offset d'un
-# instrument lors de la création d'accords.
+# Les paramètres a, d, s, r ne sont pour l'instant
+# pas utilisés mais définissent la forme d'onde d'une note.
+# le paramètre chord est utilisé pour évité l'incrémentation
+# de l'offset d'un instrument lors de la création d'accords.
 def d_note(instrName, dur, amp, note, a, d, s, r, sta=None, chord=False):
   # ...
+
+# Déclare un accord, soit n notes déclenchées au même moment par un
+# même instrument.
+def d_chord(instrName, dur, amp, chord, a, d, s, r, sta=None):
+  # ...
+
+# Retoure un string déclarant un arpège : Répète un accord sur
+# plusieurs octaves avec une durée de note constante.
+# Le sens (montant / descendant) peut être spécifié par la variable inc (-1 / 1)
+def d_arp(instrName, dur, amp, chord, a, d, s, r, loops, inc, sta = None):
+  # ...
+
+# Retourne le string terminant la déclaration d'une partition cSound.
+def d_end():
+  #...
 ```
