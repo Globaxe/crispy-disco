@@ -1,6 +1,7 @@
 import AST
 import utils
 from AST import addToClass
+from subprocess import call
 
 
 @addToClass(AST.ProgramNode)
@@ -94,10 +95,12 @@ if __name__ == '__main__':
     import sys, os
     bytecode = ""
     prog = open(sys.argv[1]).read()
+    name = os.path.splitext(sys.argv[1])[0]
     ast = parse(prog)
+    utils.filename = name
     bytecode = ast.compile()
-    name = os.path.splitext(sys.argv[1])[0]+'.csd'
-    outfile = open(name,'w')
+    outfile = open(name+'.csd','w')
     outfile.write(bytecode)
     outfile.close()
     print("Wrote output to",name)
+    call(["csound", f"{name}.csd"])

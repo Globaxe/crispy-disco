@@ -2,6 +2,7 @@ import copy
 from subprocess import call
 
 instr_id = 1
+filename = ""
 
 intstrNameId =dict()
 chordsName = dict()
@@ -53,7 +54,7 @@ def add_chord(name,chord):
     chordsName[name]=chord
 
 def d_starting():
-    return "<CsoundSynthesizer>\n<CsOptions>\n-odac\n-o out.wav _W\n</CsOptions>\n"
+    return f"<CsoundSynthesizer>\n<CsOptions>\n-odac\n-o {filename}.wav _W\n</CsOptions>\n"
 
 def d_instruments():
     if len(instruments) != 0:
