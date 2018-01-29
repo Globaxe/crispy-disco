@@ -47,6 +47,10 @@ i 1 3.00 1.50 10000.00 6.09 1.00 6.00 1.00 1.50
 i ...
 ```
 
+### Environnement
+
+Pour utiliser notre compilateur,  il est nécessaire d'installer CSound. La sortie de compliler.py donnera alors un fichier `.csd` et un fichier `.wav` car on appelle cSound depuis python grace à subprocess.
+
 ### Analyseur lexical
 
 Pour développer l'Analyseur lexical, nous nous sommes basé sur le fichier lex5.py
@@ -182,12 +186,7 @@ ARP(I_1,moican,2,+)
 ARP(I_2,[do4, do6, mi4],2,-)
 ```
 
-
-
-
 Les instruments doivent être impérativement déclarés avant de commencer une partition, afin de respecter le fonctionnement de cSound (il ne s'agit là que d'un wrapper, en somme). A noter que les commentaires commençant par un `#` sont géré par notre compilateur
-
-
 
 ### Partie métier
 
